@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MovieProjectlaso</string>
+    <string name="refresh">Refresh</string>
+    <string name="top_rated">Top rated</string>
+    <string name="popular">Popular</string>
+</resources>
