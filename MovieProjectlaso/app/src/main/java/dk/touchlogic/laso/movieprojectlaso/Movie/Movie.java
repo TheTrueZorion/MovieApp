@@ -2,9 +2,6 @@ package dk.touchlogic.laso.movieprojectlaso.Movie;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
-
-import java.io.Serializable;
 
 /**
  * Created by lasse_sorensen on 06/07/2017.
@@ -14,13 +11,13 @@ public class Movie implements Parcelable{
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     private static final String IMAGE_SIZE = "w185";
     private static final String IMAGE_SIZE_LARGE = "w342";
-    private String plot;
-    private String title;
-    private String titleOriginal;
-    private double rating;
-    private String releaseDate;
-    private String posterPath;
-    private String posterPathLarge;
+    private final String plot;
+    private final String title;
+    private final String titleOriginal;
+    private final double rating;
+    private final String releaseDate;
+    private final String posterPath;
+    private final String posterPathLarge;
 
     public Movie(String plot, String title, String titleOriginal, double rating, String releaseDate, String posterPath) {
         this.plot = plot;
@@ -77,7 +74,7 @@ public class Movie implements Parcelable{
 
 
     }
-    static final Parcelable.Creator<Movie> CREATOR
+    public static final Parcelable.Creator<Movie> CREATOR
             = new Parcelable.Creator<Movie>() {
 
         public Movie createFromParcel(Parcel in) {
@@ -89,7 +86,7 @@ public class Movie implements Parcelable{
         }
     };
 
-    public Movie(Parcel in) {
+    private Movie(Parcel in) {
         this.plot = in.readString();
         this.title = in.readString();
         this.titleOriginal = in.readString();

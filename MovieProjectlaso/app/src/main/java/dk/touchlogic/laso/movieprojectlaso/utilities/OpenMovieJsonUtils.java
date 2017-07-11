@@ -1,24 +1,20 @@
 package dk.touchlogic.laso.movieprojectlaso.utilities;
 
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.net.HttpURLConnection;
-
 import dk.touchlogic.laso.movieprojectlaso.Movie.Movie;
 
 /**
  * Created by lasse_sorensen on 07/07/2017.
  */
 
-public class OpenMovieJsonUtils {
+class OpenMovieJsonUtils {
 
     public static Movie[] getMovieListFromJson(String movieJsonStr)
         throws JSONException{
-        Movie[] movieList = null;
+        Movie[] movieList;
         final String OWM_MESSAGE_CODE = "cod";
         JSONObject movieJson = new JSONObject(movieJsonStr);
 

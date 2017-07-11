@@ -1,8 +1,6 @@
 package dk.touchlogic.laso.movieprojectlaso;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -13,7 +11,6 @@ import com.squareup.picasso.Picasso;
 import dk.touchlogic.laso.movieprojectlaso.Movie.Movie;
 
 public class DetailsActivity extends AppCompatActivity {
-    private Movie movie;
     private TextView title, plot, titleOriginal;
     private ImageView imageView;
     @Override
@@ -27,8 +24,15 @@ public class DetailsActivity extends AppCompatActivity {
         titleOriginal = (TextView) findViewById(R.id.tv_title_original_and_date);
 
         Intent intent = getIntent();
-        movie = intent.getParcelableExtra(MainActivity.TAG);
-        setupView(movie);
+        if(intent != null && intent.hasExtra(MainActivity.TAG)){
+            Movie movie = intent.getParcelableExtra(MainActivity.TAG);
+            setupView(movie);
+        }
+        else
+        {
+            setupErrorView();
+        }
+
 
     }
     private void setupView(Movie movie){
@@ -42,5 +46,8 @@ public class DetailsActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(movie.getPosterPathLarge())
                 .into(imageView);
+    }
+    private void setupErrorView(){
+        title.setText(R.string.error_text);
     }
 }

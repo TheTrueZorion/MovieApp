@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,23 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import java.net.URL;
 
 import dk.touchlogic.laso.movieprojectlaso.Movie.Movie;
 import dk.touchlogic.laso.movieprojectlaso.utilities.NetworkUtilities;
-import dk.touchlogic.laso.movieprojectlaso.utilities.OpenMovieJsonUtils;
+import dk.touchlogic.laso.movieprojectlaso.utilities.FetchMovieData;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler{
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static final String PREFS_NAME = "MyPrefsFile";
+    private static final String PREFS_NAME = "MyPrefsFile";
 
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private TextView errorMessageDisplay;
     private ProgressBar loadingIndicator;
     private NetworkUtilities.MovieSearch sortBy = NetworkUtilities.MovieSearch.TOP;
-    private GridLayoutManager manager;
-    private String sorted = "null";
 
 
     @Override
@@ -39,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         setContentView(R.layout.activity_main);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        sorted = settings.getString("sorted", "null");
+        String sorted = settings.getString("sorted", "null");
         switch (sorted){
             case "null": if (savedInstanceState != null) {
                 sortBy = (NetworkUtilities.MovieSearch) savedInstanceState.getSerializable("sortBy");
@@ -86,13 +82,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         else{
             numColumns = 2;
         }
-        manager = new GridLayoutManager(MainActivity.this,numColumns);
+        GridLayoutManager manager = new GridLayoutManager(MainActivity.this, numColumns);
         recyclerView.setLayoutManager(manager);
 
     }
 
     private void loadMovieData(){
-        new FetchMovieData().execute(sortBy);
+        new FetchMovieData(new FetchMovieDataListener()).execute(sortBy);
 
     }
     private void showMovieView() {
@@ -142,43 +138,27 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchMovieData extends AsyncTask<NetworkUtilities.MovieSearch, Void, Movie[]>{
+    public interface AsyncTaskCompleteListener<T>{
+        void onStarting();
+        void onTaskCompleted(T results);
+    }
 
+    public class FetchMovieDataListener implements AsyncTaskCompleteListener<Movie[]>{
         @Override
-        protected void onPreExecute() {
+        public void onStarting() {
             loadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected Movie[] doInBackground(NetworkUtilities.MovieSearch... params) {
-            if(params.length == 0){
-                return null;
-            }
-            Movie[] list = null;
-            NetworkUtilities.MovieSearch search = params[0];
-            //fetch data from data source
-            URL movieRequestUrl = NetworkUtilities.buildURLMovieList(search);
-            String jsonString = null;
-            try {
-                jsonString = NetworkUtilities.getResponseFromHttpUrl(movieRequestUrl);
-                list = OpenMovieJsonUtils.getMovieListFromJson(jsonString);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-
-        @Override
-        protected void onPostExecute(Movie[] movies) {
+        public void onTaskCompleted(Movie[] results) {
             loadingIndicator.setVisibility(View.INVISIBLE);
-            if(movies != null) {
+            if(results != null) {
                 showMovieView();
-                movieAdapter.setMovieList(movies);
+                movieAdapter.setMovieList(results);
             }
             else{
                 showErrorMessage();
             }
-
         }
     }
 }

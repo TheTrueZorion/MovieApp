@@ -30,7 +30,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     public interface MovieAdapterOnClickHandler{
-        public void onClick(Movie movie);
+        void onClick(Movie movie);
     }
 
     @Override
