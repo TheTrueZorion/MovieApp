@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import dk.touchlogic.laso.movieprojectlaso.Movie.Movie;
+import dk.touchlogic.laso.movieprojectlaso.utilities.FetchMovieDataFromDataBase;
 import dk.touchlogic.laso.movieprojectlaso.utilities.NetworkUtilities;
 import dk.touchlogic.laso.movieprojectlaso.utilities.FetchMovieData;
 
@@ -40,13 +41,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             case "null": if (savedInstanceState != null) {
                 sortBy = (NetworkUtilities.MovieSearch) savedInstanceState.getSerializable("sortBy");
             }break;
-            case "top": sortBy = NetworkUtilities.MovieSearch.TOP; break;
-            case "popular": sortBy = NetworkUtilities.MovieSearch.POPULAR;break;
+            case "top":
+                sortBy = NetworkUtilities.MovieSearch.TOP; break;
+            case "popular":
+                sortBy = NetworkUtilities.MovieSearch.POPULAR;break;
+            case "favorite":
+                sortBy = NetworkUtilities.MovieSearch.FAVORITES;break;
             default:
         }
         initializeViews();
         loadMovieData();
-
     }
 
     @Override
@@ -54,11 +58,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         super.onStop();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        if(sortBy == NetworkUtilities.MovieSearch.TOP)
-            editor.putString("sorted","top");
-        else
-            editor.putString("sorted","popular");
-
+        switch (sortBy){
+            case TOP: editor.putString("sorted","top");break;
+            case POPULAR:editor.putString("sorted","popular");break;
+            case FAVORITES:editor.putString("sorted","favorite");break;
+            default:
+        }
         editor.apply();
     }
 
@@ -88,7 +93,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     private void loadMovieData(){
-        new FetchMovieData(new FetchMovieDataListener()).execute(sortBy);
+        if(sortBy == NetworkUtilities.MovieSearch.FAVORITES)
+            new FetchMovieDataFromDataBase(this,new FetchMovieDataListener()).execute();
+        else
+            new FetchMovieData(new FetchMovieDataListener()).execute(sortBy);
 
     }
     private void showMovieView() {
@@ -133,6 +141,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 loadMovieData();
                 return true;
             }
+            case R.id.action_sort_favorite:
+                sortBy = NetworkUtilities.MovieSearch.FAVORITES;
+                recyclerView.setVisibility(View.INVISIBLE);
+                loadMovieData();
+                return true;
+
+
             default:
         }
         return super.onOptionsItemSelected(item);

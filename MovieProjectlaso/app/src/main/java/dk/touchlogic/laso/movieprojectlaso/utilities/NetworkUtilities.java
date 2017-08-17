@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import dk.touchlogic.laso.movieprojectlaso.BuildConfig;
@@ -20,8 +22,28 @@ public class NetworkUtilities{
     private static final String TOP_RATED ="top_rated";
     private static final String POPULAR_MOVIE ="popular";
     private static final String QUERY ="?api_key=";
+    private static final String VIDEOS ="/videos";
+    private static final String REVIEWS ="/reviews";
 
-    public enum MovieSearch implements Serializable{TOP,POPULAR}
+    public enum MovieSearch implements Serializable{TOP,POPULAR,FAVORITES}
+
+    public static List<URL> buildReviewAndVideosURL(int ID){
+        String review;
+        String videos;
+        URL urlReview = null;
+        URL urlVideos = null;
+        try {
+            review = MOVIES_BASE_URL+ID+REVIEWS+QUERY+API_KEY;
+            videos = MOVIES_BASE_URL+ID+VIDEOS+QUERY+API_KEY;
+            urlReview = new URL(review);
+            urlVideos = new URL(videos);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return Arrays.asList(urlReview,urlVideos);
+    }
 
     public static URL buildURLMovieList(MovieSearch search){
         String urlCompleted;

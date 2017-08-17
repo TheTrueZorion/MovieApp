@@ -17,8 +17,9 @@ import dk.touchlogic.laso.movieprojectlaso.Movie.Movie;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
     private Movie[] movieList;
-    private MovieAdapterOnClickHandler clickHandler;
-    private Context context;
+    private final MovieAdapterOnClickHandler clickHandler;
+    private final Context context;
+
     public MovieAdapter(MovieAdapterOnClickHandler clickHandler, Context context) {
         this.clickHandler = clickHandler;
         this.context = context;
@@ -65,7 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private ImageView theMovieImage;
+        private final ImageView theMovieImage;
 
         public MovieViewHolder(View view){
             super(view);

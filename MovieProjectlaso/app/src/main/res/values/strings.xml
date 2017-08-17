@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Movie app</string>
+    <string name="favorites">Favorites</string>
     <string name="top_rated">Top rated</string>
     <string name="popular">Popular</string>
     <string name="error_text">An error occurred. Please refresh the page</string>
+    <string name="reviews">Reviews and trailers</string>
+    <string name="btn_favorism_activated">My favorite!</string>
+    <string name="btn_favorism_deactivated">Make favorite</string>
 </resources>

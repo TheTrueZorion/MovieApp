@@ -3,6 +3,8 @@ package dk.touchlogic.laso.movieprojectlaso.Movie;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 /**
  * Created by lasse_sorensen on 06/07/2017.
  */
@@ -18,8 +20,13 @@ public class Movie implements Parcelable{
     private final String releaseDate;
     private final String posterPath;
     private final String posterPathLarge;
+    private final String posterPathID;
+    private final int movieID;
+    private List<Trailer> trailers;
+    private List<Review> reviews;
 
-    public Movie(String plot, String title, String titleOriginal, double rating, String releaseDate, String posterPath) {
+
+    public Movie(String plot, String title, String titleOriginal, double rating, String releaseDate, String posterPath, int movieID) {
         this.plot = plot;
         this.title = title;
         this.titleOriginal = titleOriginal;
@@ -27,6 +34,8 @@ public class Movie implements Parcelable{
         this.releaseDate = releaseDate;
         this.posterPath = IMAGE_BASE_URL+IMAGE_SIZE+posterPath;
         this.posterPathLarge = IMAGE_BASE_URL+IMAGE_SIZE_LARGE+posterPath;
+        this.posterPathID = posterPath;
+        this.movieID = movieID;
     }
 
 
@@ -47,6 +56,10 @@ public class Movie implements Parcelable{
         return posterPathLarge;
     }
 
+    public String getPosterPathID() {
+        return posterPathID;
+    }
+
     public double getRating() { return rating; }
 
     public String getTitleOriginal() {
@@ -55,6 +68,24 @@ public class Movie implements Parcelable{
 
     public String getReleaseDate() {
         return releaseDate;
+    }
+
+    public List<Trailer> getTrailers() {
+        return trailers;
+    }
+
+    public void setTrailers(List<Trailer> trailers){
+        this.trailers = trailers;
+    }
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews){
+        this.reviews = reviews;
+    }
+    public int getMovieID() {
+        return movieID;
     }
 
     @Override
@@ -71,6 +102,10 @@ public class Movie implements Parcelable{
         dest.writeString(releaseDate);
         dest.writeString(posterPath);
         dest.writeString(posterPathLarge);
+        dest.writeString(posterPathID);
+        dest.writeInt(movieID);
+        dest.writeList(trailers);
+        dest.writeList(reviews);
 
 
     }
@@ -94,6 +129,10 @@ public class Movie implements Parcelable{
         this.releaseDate = in.readString();
         this.posterPath = in.readString();
         this.posterPathLarge = in.readString();
+        this.posterPathID = in.readString();
+        this.movieID = in.readInt();
+        in.readList(trailers,null);
+        in.readList(reviews,null);
     }
 
 }

@@ -1,10 +1,7 @@
 package dk.touchlogic.laso.movieprojectlaso.utilities;
 
-import android.content.Context;
 import android.os.AsyncTask;
-
 import java.net.URL;
-
 import dk.touchlogic.laso.movieprojectlaso.MainActivity;
 import dk.touchlogic.laso.movieprojectlaso.Movie.Movie;
 
